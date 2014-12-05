@@ -1,39 +1,44 @@
 #include "stdafx.h"
 
-static inline char *my_av_ts_make_string(int64_t ts)
+static inline TCHAR *my_av_ts_make_string(int64_t ts)
 {
-	static char buf[AV_TS_MAX_STRING_SIZE] = {0};
-	if (ts == AV_NOPTS_VALUE) _snprintf_s(buf, AV_TS_MAX_STRING_SIZE, 1024, "NOPTS");
-	else                      _snprintf_s(buf, AV_TS_MAX_STRING_SIZE, 1024, "%"PRId64, ts);
+	static TCHAR buf[AV_TS_MAX_STRING_SIZE] = {0};
+	if (ts == AV_NOPTS_VALUE) _sntprintf_s(buf, AV_TS_MAX_STRING_SIZE, 1024, _T("NOPTS"));
+	else                      _sntprintf_s(buf, AV_TS_MAX_STRING_SIZE, 1024, _T("%I64d"), ts);
 	return buf;
 }
 
-static inline char *my_av_ts_make_time_string(int64_t ts, AVRational *tb)
+static inline TCHAR *my_av_ts_make_time_string(int64_t ts, AVRational *tb)
 {
-	static char buf[AV_TS_MAX_STRING_SIZE] = {0};
-	if (ts == AV_NOPTS_VALUE) _snprintf_s(buf, AV_TS_MAX_STRING_SIZE, 1024, "NOPTS");
-	else                      _snprintf_s(buf, AV_TS_MAX_STRING_SIZE, 1024, "%.6g", av_q2d(*tb) * ts);
+	static TCHAR buf[AV_TS_MAX_STRING_SIZE] = {0};
+	if (ts == AV_NOPTS_VALUE) _sntprintf_s(buf, AV_TS_MAX_STRING_SIZE, 1024, _T("NOPTS"));
+	else                      _sntprintf_s(buf, AV_TS_MAX_STRING_SIZE, 1024, _T("%.6g"), av_q2d(*tb) * ts);
 	return buf;
 }
 
-static inline char *my_av_make_error_string(size_t errbuf_size, int errnum)
+static inline TCHAR *my_av_make_error_string(size_t errbuf_size, int errnum)
 {
-	static char errbuf[AV_ERROR_MAX_STRING_SIZE] = {0};
+	char errbuf[AV_ERROR_MAX_STRING_SIZE] = {0};
+	static TCHAR errbufW[AV_ERROR_MAX_STRING_SIZE] = {0};
 	av_strerror(errnum, errbuf, errbuf_size);
-	return errbuf;
+	USES_CONVERSION;
+	lstrcpy(errbufW, A2W(errbuf));
+	return errbufW;
 }
 
 #define my_av_ts2str(ts) my_av_ts_make_string(ts)
 #define my_av_ts2timestr(ts, tb) my_av_ts_make_time_string(ts, tb)
 #define my_av_err2str(errnum) my_av_make_error_string(AV_ERROR_MAX_STRING_SIZE, errnum)
 
-CGetVideoBitrate::CGetVideoBitrate()
+CGetVideoBitrate::CGetVideoBitrate() :
+m_ifmt_ctx(NULL)
 {
 	memset(m_strErrorMsg, 0, sizeof(m_strErrorMsg));
 }
 
 CGetVideoBitrate::~CGetVideoBitrate()
 {
+	Close();
 }
 
 
@@ -49,70 +54,72 @@ static void log_packet(const AVFormatContext *fmt_ctx, const AVPacket *pkt, cons
 	OutputDebugStringA(szbuf);
 }
 
-int CGetVideoBitrate::GetVideoBitrate(const char *in_filename)
+BOOL CGetVideoBitrate::Open(LPCTSTR lpszFileName)
 {
-    AVFormatContext *ifmt_ctx = NULL;
+	int ret;
+	USES_CONVERSION;
+	if ((ret = avformat_open_input(&m_ifmt_ctx, W2A(lpszFileName), 0, 0)) < 0)
+	{
+		_stprintf_s(m_strErrorMsg, ERROR_MSG_SIZE, _T("Could not open input file '%s'"), lpszFileName);
+		return FALSE;
+	}
+	if ((ret = avformat_find_stream_info(m_ifmt_ctx, 0)) < 0)
+	{
+		_stprintf_s(m_strErrorMsg, ERROR_MSG_SIZE, _T("Failed to retrieve input stream information"));
+		return FALSE;
+	}
+	return TRUE;
+}
+
+BOOL CGetVideoBitrate::Close()
+{
+	if (m_ifmt_ctx)
+	{
+		avformat_close_input(&m_ifmt_ctx);
+		m_ifmt_ctx = NULL;
+	}
+	m_frameInfoList.clear();
+	return TRUE;
+}
+
+BOOL CGetVideoBitrate::Parse(UINT video_selected_stream_index)
+{
     AVPacket pkt;
 	int ret;
-	unsigned int i;
-	unsigned int video_selected_stream_index = 0;
 
-    av_register_all();
-
-    if ((ret = avformat_open_input(&ifmt_ctx, in_filename, 0, 0)) < 0)
-	{
-		sprintf_s(m_strErrorMsg, ERROR_MSG_SIZE, "Could not open input file '%s'", in_filename);
-        goto end;
-    }
-
-    if ((ret = avformat_find_stream_info(ifmt_ctx, 0)) < 0)
-	{
-		sprintf_s(m_strErrorMsg, ERROR_MSG_SIZE, "Failed to retrieve input stream information");
-        goto end;
-    }
-
-    av_dump_format(ifmt_ctx, 0, in_filename, 0);
-
-    for (i = 0; i < ifmt_ctx->nb_streams; i++)
-	{
-        AVStream *in_stream = ifmt_ctx->streams[i];
-		if (in_stream->codec->codec_type == AVMEDIA_TYPE_VIDEO)
-		{
-			video_selected_stream_index = i;
-			break;
-		}
-    }
-
-    while (1)
+	while (1)
 	{
         AVStream *in_stream;
 
-        ret = av_read_frame(ifmt_ctx, &pkt);
+        ret = av_read_frame(m_ifmt_ctx, &pkt);
         if (ret < 0)
             break;
 
-        in_stream  = ifmt_ctx->streams[pkt.stream_index];
+		in_stream = m_ifmt_ctx->streams[pkt.stream_index];
 
 		if (pkt.stream_index == video_selected_stream_index)
 		{
-			log_packet(ifmt_ctx, &pkt, "in");
+			log_packet(m_ifmt_ctx, &pkt, "in");
 		}
 
         av_free_packet(&pkt);
     }
 
-end:
-
-    avformat_close_input(&ifmt_ctx);
-
-
     if (ret < 0 && ret != AVERROR_EOF)
 	{
-		sprintf_s(m_strErrorMsg, ERROR_MSG_SIZE, "Error occurred: %s\n", my_av_err2str(ret));
-        return 1;
+		_stprintf_s(m_strErrorMsg, ERROR_MSG_SIZE, _T("Error occurred: %s\n"), my_av_err2str(ret));
+        return FALSE;
     }
 
-    return 0;
+    return TRUE;
 }
 
+UINT CGetVideoBitrate::GetStreamCount() const
+{
+	if (m_ifmt_ctx)
+	{
+		return m_ifmt_ctx->nb_streams;
+	}
+	return 0;
+}
 

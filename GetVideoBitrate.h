@@ -16,10 +16,20 @@ public:
 	~CGetVideoBitrate();
 
 public:
-	int GetVideoBitrate(const char *in_filename);
-	
+	BOOL Open(LPCTSTR lpszFileName);
+	BOOL Parse(UINT video_selected_stream_index);
+	BOOL Close();
+
+public:
+	UINT GetStreamCount() const;
+	CString GetStreamInfo(UINT index) const;
+
+public:
+	LPCTSTR GetErrorMsg() const { return m_strErrorMsg; }
+
 private:
-	char m_strErrorMsg[ERROR_MSG_SIZE];
+	TCHAR m_strErrorMsg[ERROR_MSG_SIZE];
 	std::vector<FrameBitrate > m_frameInfoList;
+	AVFormatContext *m_ifmt_ctx;
 };
 

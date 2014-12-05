@@ -13,6 +13,8 @@ CAppModule _Module;
 
 int Run(LPTSTR /*lpstrCmdLine*/ = NULL, int nCmdShow = SW_SHOWDEFAULT)
 {
+	av_register_all();
+
 	CMessageLoop theLoop;
 	_Module.AddMessageLoop(&theLoop);
 
