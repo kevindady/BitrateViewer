@@ -1,0 +1,28 @@
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PropertyGrid", "PropertyGrid.vcproj", "{5E8B188B-41E2-4A54-9FD1-CA89A4D56A83}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PropGrid", "test\PropGrid.vcproj", "{9CD86097-4CC2-4A08-BE7F-BC60DF2FAD8C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5E8B188B-41E2-4A54-9FD1-CA89A4D56A83} = {5E8B188B-41E2-4A54-9FD1-CA89A4D56A83}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5E8B188B-41E2-4A54-9FD1-CA89A4D56A83}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5E8B188B-41E2-4A54-9FD1-CA89A4D56A83}.Debug|Win32.Build.0 = Debug|Win32
+		{5E8B188B-41E2-4A54-9FD1-CA89A4D56A83}.Release|Win32.ActiveCfg = Release|Win32
+		{5E8B188B-41E2-4A54-9FD1-CA89A4D56A83}.Release|Win32.Build.0 = Release|Win32
+		{9CD86097-4CC2-4A08-BE7F-BC60DF2FAD8C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9CD86097-4CC2-4A08-BE7F-BC60DF2FAD8C}.Debug|Win32.Build.0 = Debug|Win32
+		{9CD86097-4CC2-4A08-BE7F-BC60DF2FAD8C}.Release|Win32.ActiveCfg = Release|Win32
+		{9CD86097-4CC2-4A08-BE7F-BC60DF2FAD8C}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
