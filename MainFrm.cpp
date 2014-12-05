@@ -130,6 +130,8 @@ LRESULT CMainFrame::OnDropFiles(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/,
 			// ***  
 			// Do whatever you want with the filename in szNextFile.
 			// ***  
+			USES_CONVERSION;
+			m_clGetVideoBitrate.GetVideoBitrate(W2A(szNextFile));
 			break;
 		}         
 	}   

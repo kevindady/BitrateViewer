@@ -18,6 +18,20 @@ LRESULT CBitrateViewerView::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*l
 	CPaintDC dc(m_hWnd);
 
 	//TODO: Add your drawing code here
+	return 0;
+}
 
+LRESULT CBitrateViewerView::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled)
+{
+	m_clInfoPanelDlg.Create(m_hWnd);
+	m_clInfoPanelDlg.ShowWindow(SW_SHOW);
+	bHandled = FALSE;
+	return 0;
+}
+
+LRESULT CBitrateViewerView::OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled)
+{
+	bHandled = FALSE;
+	m_clInfoPanelDlg.DestroyWindow();
 	return 0;
 }

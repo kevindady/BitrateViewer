@@ -8,6 +8,12 @@
       <UniqueIdentifier>{5a8a252e-2cfc-44a9-af1e-dfe594cc4f04}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;jpg;jpeg;jpe;manifest</Extensions>
     </Filter>
+    <Filter Include="ffmpeg">
+      <UniqueIdentifier>{01fc87ab-8380-49b1-952c-f2db8a712900}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\InfoPanel">
+      <UniqueIdentifier>{9f310f61-0e29-4ff7-ae19-fdb277924012}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AboutDlg.cpp">
@@ -25,6 +31,12 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>UI</Filter>
     </ClCompile>
+    <ClCompile Include="GetVideoBitrate.cpp">
+      <Filter>ffmpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="InfoPanelDlg.cpp">
+      <Filter>UI\InfoPanel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AboutDlg.h">
@@ -41,6 +53,12 @@
     </ClInclude>
     <ClInclude Include="stdafx.h">
       <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="GetVideoBitrate.h">
+      <Filter>ffmpeg</Filter>
+    </ClInclude>
+    <ClInclude Include="InfoPanelDlg.h">
+      <Filter>UI\InfoPanel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

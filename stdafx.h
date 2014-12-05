@@ -23,6 +23,32 @@ extern CAppModule _Module;
 #include <atldlgs.h>
 #include <atlctrlw.h>
 
+#include <vector>
+
+#define inline _inline
+#ifndef INT64_C
+#define INT64_C(c) (c ## LL)
+#define UINT64_C(c) (c ## ULL)
+#endif
+
+#pragma comment(lib, "avformat.lib")
+#pragma comment(lib, "avcodec.lib")
+#pragma comment(lib, "avutil.lib")
+#pragma comment(lib, "postproc.lib")
+#pragma comment(lib, "swresample.lib")
+#pragma comment(lib, "swscale.lib")
+
+extern "C"
+{
+#include <libavutil/timestamp.h>
+#include <libavformat/avformat.h>
+}
+
+#include "GetVideoBitrate.h"
+
+#include "resource.h"
+
+#include "InfoPanelDlg.h"
 
 #if defined _M_IX86
   #pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='x86' publicKeyToken='6595b64144ccf1df' language='*'\"")
