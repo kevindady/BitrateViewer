@@ -1,64 +1,59 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{042c48dd-ac47-4368-a296-391c4179d89b}</UniqueIdentifier>
-      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm</Extensions>
+    <Filter Include="UI">
+      <UniqueIdentifier>{73c82e3f-3d7c-45e7-8ca0-4ee1ba9c85dc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{8899ce7b-207b-4b40-a25a-f7a944fe2f7d}</UniqueIdentifier>
-      <Extensions>h;hpp;hxx;hm;inl;inc</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
+    <Filter Include="UI\Res">
       <UniqueIdentifier>{5a8a252e-2cfc-44a9-af1e-dfe594cc4f04}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;jpg;jpeg;jpe;manifest</Extensions>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="AboutDlg.cpp">
+      <Filter>UI</Filter>
     </ClCompile>
     <ClCompile Include="BitrateViewer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MainFrm.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>UI</Filter>
     </ClCompile>
     <ClCompile Include="BitrateViewerView.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>UI</Filter>
     </ClCompile>
-    <ClCompile Include="AboutDlg.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="MainFrm.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="stdafx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MainFrm.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="AboutDlg.h">
+      <Filter>UI</Filter>
     </ClInclude>
     <ClInclude Include="BitrateViewerView.h">
-      <Filter>Header Files</Filter>
+      <Filter>UI</Filter>
     </ClInclude>
-    <ClInclude Include="AboutDlg.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="MainFrm.h">
+      <Filter>UI</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
-      <Filter>Header Files</Filter>
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="BitrateViewer.rc">
-      <Filter>Resource Files</Filter>
+      <Filter>UI\Res</Filter>
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\toolbar.bmp">
-      <Filter>Resource Files</Filter>
+      <Filter>UI\Res</Filter>
     </Image>
     <Image Include="res\BitrateViewer.ico">
-      <Filter>Resource Files</Filter>
+      <Filter>UI\Res</Filter>
     </Image>
   </ItemGroup>
 </Project>
