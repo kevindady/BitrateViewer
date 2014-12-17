@@ -32,6 +32,22 @@ LRESULT CInfoPanelDlg::OnOpenFile(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWn
 	return 0;
 }
 
+LRESULT CInfoPanelDlg::OnParse(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+{
+	CComboBox clStreamInfo = GetDlgItem(IDC_STREAMINFO);
+	LONG lSel = clStreamInfo.GetCurSel();
+	if (lSel != CB_ERR)
+	{
+		UINT video_selected_stream_index = (UINT)clStreamInfo.GetItemData(lSel);
+		m_clGetVideoBitrate.Parse(video_selected_stream_index);
+	}
+	else
+	{
+		MessageBox(_T("Please select a stream."), _T("Error"), MB_OK);
+	}
+	return 0;
+}
+
 BOOL CInfoPanelDlg::Open(LPCTSTR lpszFileName)
 {
 	if (!m_clGetVideoBitrate.Open(lpszFileName))

@@ -1,7 +1,5 @@
 #pragma once
 
-#define ERROR_MSG_SIZE	1024
-
 struct FrameBitrate
 {
 	int64_t pts;
@@ -28,7 +26,7 @@ public:
 	LPCTSTR GetErrorMsg() const { return m_strErrorMsg; }
 
 private:
-	TCHAR m_strErrorMsg[ERROR_MSG_SIZE];
+	CString m_strErrorMsg;
 	std::vector<FrameBitrate > m_frameInfoList;
 	AVFormatContext *m_ifmt_ctx;
 };

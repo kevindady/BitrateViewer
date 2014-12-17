@@ -1,39 +1,19 @@
 #include "stdafx.h"
 
-static inline TCHAR *my_av_ts_make_string(int64_t ts)
-{
-	static TCHAR buf[AV_TS_MAX_STRING_SIZE] = {0};
-	if (ts == AV_NOPTS_VALUE) _sntprintf_s(buf, AV_TS_MAX_STRING_SIZE, 1024, _T("NOPTS"));
-	else                      _sntprintf_s(buf, AV_TS_MAX_STRING_SIZE, 1024, _T("%I64d"), ts);
-	return buf;
-}
-
-static inline TCHAR *my_av_ts_make_time_string(int64_t ts, AVRational *tb)
-{
-	static TCHAR buf[AV_TS_MAX_STRING_SIZE] = {0};
-	if (ts == AV_NOPTS_VALUE) _sntprintf_s(buf, AV_TS_MAX_STRING_SIZE, 1024, _T("NOPTS"));
-	else                      _sntprintf_s(buf, AV_TS_MAX_STRING_SIZE, 1024, _T("%.6g"), av_q2d(*tb) * ts);
-	return buf;
-}
-
-static inline TCHAR *my_av_make_error_string(size_t errbuf_size, int errnum)
+static inline CString my_av_make_error_string(int errnum)
 {
 	char errbuf[AV_ERROR_MAX_STRING_SIZE] = {0};
-	static TCHAR errbufW[AV_ERROR_MAX_STRING_SIZE] = {0};
-	av_strerror(errnum, errbuf, errbuf_size);
-	USES_CONVERSION;
-	lstrcpy(errbufW, A2W(errbuf));
-	return errbufW;
+	CString strRet;
+	av_strerror(errnum, errbuf, AV_ERROR_MAX_STRING_SIZE);
+	strRet = errbuf;
+	return strRet;
 }
 
-#define my_av_ts2str(ts) my_av_ts_make_string(ts)
-#define my_av_ts2timestr(ts, tb) my_av_ts_make_time_string(ts, tb)
-#define my_av_err2str(errnum) my_av_make_error_string(AV_ERROR_MAX_STRING_SIZE, errnum)
+#define my_av_err2str(errnum) my_av_make_error_string(errnum)
 
 CGetVideoBitrate::CGetVideoBitrate() :
 m_ifmt_ctx(NULL)
 {
-	memset(m_strErrorMsg, 0, sizeof(m_strErrorMsg));
 }
 
 CGetVideoBitrate::~CGetVideoBitrate()
@@ -47,9 +27,9 @@ static void log_packet(const AVFormatContext *fmt_ctx, const AVPacket *pkt, cons
 	AVRational *time_base = &fmt_ctx->streams[pkt->stream_index]->time_base;
 	double video_frame_rate = (double)(fmt_ctx->streams[pkt->stream_index]->codec->framerate.num) / fmt_ctx->streams[pkt->stream_index]->codec->framerate.den;
 	char szbuf[200];
-	sprintf_s(szbuf, 200, "pts:%s pts_time:%s duration:%s duration_time:%s bitrate=%d keyframe=%d\r\n",
-		my_av_ts2str(pkt->pts), my_av_ts2timestr(pkt->pts, time_base),
-		my_av_ts2str(pkt->duration), my_av_ts2timestr(pkt->duration, time_base),
+	sprintf_s(szbuf, 200, "pts:%I64d duration:%d bitrate=%d keyframe=%d\r\n",
+		pkt->pts,
+		pkt->duration,
 		int(pkt->size * 8 * video_frame_rate), (pkt->flags & AV_PKT_FLAG_KEY) ? 1 : 0); // 30 frame rate
 	OutputDebugStringA(szbuf);
 }
@@ -60,12 +40,12 @@ BOOL CGetVideoBitrate::Open(LPCTSTR lpszFileName)
 	USES_CONVERSION;
 	if ((ret = avformat_open_input(&m_ifmt_ctx, W2A(lpszFileName), 0, 0)) < 0)
 	{
-		_stprintf_s(m_strErrorMsg, ERROR_MSG_SIZE, _T("Could not open input file '%s'"), lpszFileName);
+		m_strErrorMsg.Format(_T("Could not open input file '%s'"), lpszFileName);
 		return FALSE;
 	}
 	if ((ret = avformat_find_stream_info(m_ifmt_ctx, 0)) < 0)
 	{
-		_stprintf_s(m_strErrorMsg, ERROR_MSG_SIZE, _T("Failed to retrieve input stream information"));
+		m_strErrorMsg.Format(_T("Failed to retrieve input stream information"));
 		return FALSE;
 	}
 	return TRUE;
@@ -107,7 +87,7 @@ BOOL CGetVideoBitrate::Parse(UINT video_selected_stream_index)
 
     if (ret < 0 && ret != AVERROR_EOF)
 	{
-		_stprintf_s(m_strErrorMsg, ERROR_MSG_SIZE, _T("Error occurred: %s\n"), my_av_err2str(ret));
+		m_strErrorMsg.Format(_T("Error occurred: %s\n"), my_av_err2str(ret));
         return FALSE;
     }
 
