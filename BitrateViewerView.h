@@ -27,7 +27,7 @@ public:
 	LRESULT OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 
 public:
-	void AddStreamInfo(CString strDesc, UINT index);
+	BOOL Open(LPCTSTR lpszFileName);
 
 private:
 	CInfoPanelDlg m_clInfoPanelDlg;

@@ -22,6 +22,38 @@ LRESULT CInfoPanelDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*l
 	return TRUE;
 }
 
+LRESULT CInfoPanelDlg::OnOpenFile(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+{
+	CFileDialog clFileDialog(TRUE);
+	if (clFileDialog.DoModal(m_hWnd) == IDOK)
+	{
+		Open(clFileDialog.m_ofn.lpstrFile);
+	}
+	return 0;
+}
+
+BOOL CInfoPanelDlg::Open(LPCTSTR lpszFileName)
+{
+	if (!m_clGetVideoBitrate.Open(lpszFileName))
+	{
+		MessageBox(m_clGetVideoBitrate.GetErrorMsg(), _T("Error"), MB_OK);
+		return FALSE;
+	}
+	else
+	{
+		UINT count = m_clGetVideoBitrate.GetStreamCount();
+		if (count > 0)
+		{
+			for (UINT i = 0; i < count; ++i)
+			{
+				CString strDesc = m_clGetVideoBitrate.GetStreamInfo(i);
+				AddStreamInfo(strDesc, i);
+			}
+		}
+	}
+	return TRUE;
+}
+
 void CInfoPanelDlg::AddStreamInfo(CString strDesc, UINT index)
 {
 	CComboBox clStreamInfo = GetDlgItem(IDC_STREAMINFO);

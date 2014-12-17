@@ -53,7 +53,4 @@ public:
 
 public:
 	CMainFrame();
-
-public:
-	CGetVideoBitrate m_clGetVideoBitrate;
 };

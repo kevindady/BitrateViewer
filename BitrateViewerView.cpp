@@ -36,8 +36,8 @@ LRESULT CBitrateViewerView::OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /
 	return 0;
 }
 
-void CBitrateViewerView::AddStreamInfo(CString strDesc, UINT index)
+BOOL CBitrateViewerView::Open(LPCTSTR lpszFileName)
 {
-	m_clInfoPanelDlg.AddStreamInfo(strDesc, index);
+	return m_clInfoPanelDlg.Open(lpszFileName);
 }
 

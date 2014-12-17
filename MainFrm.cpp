@@ -130,19 +130,7 @@ LRESULT CMainFrame::OnDropFiles(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/,
 			// ***  
 			// Do whatever you want with the filename in szNextFile.
 			// ***  
-			if (!m_clGetVideoBitrate.Open(szNextFile))
-			{
-				MessageBox(m_clGetVideoBitrate.GetErrorMsg(), _T("Error"), MB_OK);
-			}
-			else
-			{
-				UINT count = m_clGetVideoBitrate.GetStreamCount();
-				for (UINT i = 0; i < count; ++i)
-				{
-					CString strDesc = m_clGetVideoBitrate.GetStreamInfo(i);
-					m_view.AddStreamInfo(strDesc, i);
-				}
-			}
+			m_view.Open(szNextFile);
 			break;
 		}         
 	}   
