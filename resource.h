@@ -11,8 +11,9 @@
 #define IDC_EXPORTBTN                   1003
 #define IDC_SHOWMODE                    1004
 #define IDC_PROPAREA                    1005
-#define IDC_EDIT2                       1006
 #define IDC_CURINFO                     1006
+#define IDC_SHOWMODE2                   1007
+#define IDC_STREAMINFO                  1007
 
 // Next default values for new objects
 // 

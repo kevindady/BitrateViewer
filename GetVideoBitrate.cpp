@@ -123,3 +123,18 @@ UINT CGetVideoBitrate::GetStreamCount() const
 	return 0;
 }
 
+CString CGetVideoBitrate::GetStreamInfo(UINT index) const
+{
+	CString strRet;
+	if (m_ifmt_ctx && index >= 0 && index < m_ifmt_ctx->nb_streams)
+	{
+		const AVCodecDescriptor *desc = avcodec_descriptor_get(m_ifmt_ctx->streams[index]->codec->codec_id);
+		if (desc)
+		{
+			strRet = desc->long_name;
+		}
+	}
+	return strRet;
+}
+
+

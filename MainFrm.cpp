@@ -136,7 +136,12 @@ LRESULT CMainFrame::OnDropFiles(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/,
 			}
 			else
 			{
-
+				UINT count = m_clGetVideoBitrate.GetStreamCount();
+				for (UINT i = 0; i < count; ++i)
+				{
+					CString strDesc = m_clGetVideoBitrate.GetStreamInfo(i);
+					m_view.AddStreamInfo(strDesc, i);
+				}
 			}
 			break;
 		}         

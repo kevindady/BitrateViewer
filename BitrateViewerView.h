@@ -26,6 +26,9 @@ public:
 	LRESULT OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 
+public:
+	void AddStreamInfo(CString strDesc, UINT index);
+
 private:
 	CInfoPanelDlg m_clInfoPanelDlg;
 };

@@ -35,3 +35,9 @@ LRESULT CBitrateViewerView::OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /
 	m_clInfoPanelDlg.DestroyWindow();
 	return 0;
 }
+
+void CBitrateViewerView::AddStreamInfo(CString strDesc, UINT index)
+{
+	m_clInfoPanelDlg.AddStreamInfo(strDesc, index);
+}
+
