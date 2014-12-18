@@ -86,11 +86,31 @@ BOOL CGetVideoBitrate::Parse(UINT video_selected_stream_index)
 
 		if (pkt.stream_index == video_selected_stream_index)
 		{
+// 			int len, got_frame;
+// 			AVCodec *dec = NULL;
+// 			AVDictionary *opts = NULL;
+// 			AVCodecContext *avctx;
+// 			AVFrame *aframe;
+// 			aframe = av_frame_alloc();
+// 
+// 			dec = avcodec_find_decoder(m_ifmt_ctx->streams[video_selected_stream_index]->codec->codec_id);
+// 			if (avcodec_open2(m_ifmt_ctx->streams[video_selected_stream_index]->codec, dec, &opts) >= 0)
+// 			{
+// 				int wyg = 0;
+// 			}
+// 			len = avcodec_decode_video2(m_ifmt_ctx->streams[video_selected_stream_index]->codec, aframe, &got_frame, &pkt);
+// 			if (len < 0)
+// 			{
+// 				return len;
+// 			}
+// 			if (got_frame)
+// 			{
+// 			}
 			FrameBitrate frame;
 			frame.pts = pkt.pts;
-			frame.dts = pkt.dts;
 			frame.framesize = pkt.size;
 			frame.duration = pkt.duration;
+			frame.keyframe = (pkt.flags & AV_PKT_FLAG_KEY) ? 1 : 0;
 			m_frameInfoList.push_back(frame);
 //			log_packet(m_ifmt_ctx, &pkt, firstpts);
 		}
@@ -128,6 +148,7 @@ BOOL CGetVideoBitrate::GetStreamInfo(UINT index, StreamInfo *pStreamInfo)
 		pStreamInfo->duration = (LONGLONG)((av_q2d(m_ifmt_ctx->streams[index]->time_base) * pStreamInfo->duration) * 10000000L);
 		pStreamInfo->sample_aspect_ratio = m_ifmt_ctx->streams[index]->codec->sample_aspect_ratio;
 		pStreamInfo->frame_rate = ((double)m_ifmt_ctx->streams[index]->r_frame_rate.num) / m_ifmt_ctx->streams[index]->r_frame_rate.den;
+		pStreamInfo->time_base = m_ifmt_ctx->streams[index]->time_base;
 		const AVCodecDescriptor *desc = avcodec_descriptor_get(m_ifmt_ctx->streams[index]->codec->codec_id);
 		if (desc)
 		{

@@ -1,5 +1,13 @@
 #pragma once
 
+enum BITRATE_DISPLAY_MODE
+{
+	BITRATE_DISPLAY_NORMAL,
+	BITRATE_DISPLAY_FRAMESIZE,
+	BITRATE_DISPLAY_FRAMESIZE_BIT,
+	BITRATE_DISPLAY_FRAMESIZE_BYTE,
+};
+
 class CFrameInfoList : public CCheckListViewCtrl
 {
 public:
@@ -15,13 +23,17 @@ public:
 	BOOL Init(HWND hListCtrl);
 	BOOL Uninit();
 
-	BOOL AddListItem(const std::vector<FrameBitrate > *pFrameInfoList);
+	BOOL AddListItem(StreamInfo *pStreamInfo, const std::vector<FrameBitrate > *pFrameInfoList);
+
+	void setBitrateDisplayMode(BITRATE_DISPLAY_MODE mode);
 
 public:
-	CFrameInfoList() : m_pFrameInfoList(NULL) {};
+	CFrameInfoList();
 	virtual ~CFrameInfoList() {};
 	
 private:
-	const std::vector<FrameBitrate > *m_pFrameInfoList;
+	const std::vector<FrameBitrate >	*m_pFrameInfoList;
+	StreamInfo							m_streamInfo;
+	BITRATE_DISPLAY_MODE				m_bitrateDisplayMode;
 };
 

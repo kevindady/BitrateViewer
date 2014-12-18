@@ -3,9 +3,9 @@
 struct FrameBitrate
 {
 	int64_t pts;
-	int64_t dts;
 	int framesize;
 	int duration;
+	int keyframe;
 };
 
 struct StreamInfo
@@ -18,6 +18,7 @@ struct StreamInfo
 	int64_t duration;
 	AVRational sample_aspect_ratio;
 	double frame_rate;
+	AVRational time_base;
 };
 
 class CGetVideoBitrate

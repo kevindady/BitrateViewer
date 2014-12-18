@@ -1,5 +1,11 @@
 #include "stdafx.h"
 
+CFrameInfoList::CFrameInfoList() :
+m_pFrameInfoList(NULL),
+m_bitrateDisplayMode(BITRATE_DISPLAY_FRAMESIZE)
+{
+};
+
 BOOL CFrameInfoList::Init(HWND hListCtrl)
 {
 	SubclassWindow(hListCtrl);
@@ -33,8 +39,9 @@ BOOL CFrameInfoList::Uninit()
 	return TRUE;
 }
 
-BOOL CFrameInfoList::AddListItem(const std::vector<FrameBitrate > *pFrameInfoList)
+BOOL CFrameInfoList::AddListItem(StreamInfo *pStreamInfo, const std::vector<FrameBitrate > *pFrameInfoList)
 {
+	m_streamInfo = *pStreamInfo;
 	m_pFrameInfoList = pFrameInfoList;
 	size_t count = (*m_pFrameInfoList).size();
 	if (count < 0)
@@ -82,21 +89,50 @@ LRESULT CFrameInfoList::OnGetDispInfo(int idCtrl, LPNMHDR pnmh, BOOL &bHandled)
 
 			case 1:  //Time
 			{
+				LONGLONG time = (LONGLONG)((av_q2d(m_streamInfo.time_base) * ((*m_pFrameInfoList)[lItemIndex].pts - (*m_pFrameInfoList)[0].pts)) * 10000000L);
+				_stprintf_s(str, MAX_PATH, _T("%I64d"), time);
+				lstrcpyn(pdi->item.pszText, str, pdi->item.cchTextMax);
 			}
 			break;
 			
 			case 2:  //Bitrate
 			{
+				if (m_bitrateDisplayMode == BITRATE_DISPLAY_NORMAL)
+				{
+					int framerate = int((*m_pFrameInfoList)[lItemIndex].framesize * 8 * m_streamInfo.frame_rate);
+					_stprintf_s(str, MAX_PATH, _T("%d"), framerate);
+					lstrcpyn(pdi->item.pszText, str, pdi->item.cchTextMax);
+				}
+				else if (m_bitrateDisplayMode == BITRATE_DISPLAY_FRAMESIZE)
+				{
+					_stprintf_s(str, MAX_PATH, _T("%d (%d byte)"), (*m_pFrameInfoList)[lItemIndex].framesize * 8, (*m_pFrameInfoList)[lItemIndex].framesize);
+					lstrcpyn(pdi->item.pszText, str, pdi->item.cchTextMax);
+				}
+				else if (m_bitrateDisplayMode == BITRATE_DISPLAY_FRAMESIZE_BIT)
+				{
+					_stprintf_s(str, MAX_PATH, _T("%d"), (*m_pFrameInfoList)[lItemIndex].framesize * 8);
+					lstrcpyn(pdi->item.pszText, str, pdi->item.cchTextMax);
+				}
+				else if (m_bitrateDisplayMode == BITRATE_DISPLAY_FRAMESIZE_BYTE)
+				{
+					_stprintf_s(str, MAX_PATH, _T("%d"), (*m_pFrameInfoList)[lItemIndex].framesize);
+					lstrcpyn(pdi->item.pszText, str, pdi->item.cchTextMax);
+				}
 			}
 			break;
 
 			case 3: // Key Frame
 			{
+				_stprintf_s(str, MAX_PATH, _T("%d"), (*m_pFrameInfoList)[lItemIndex].keyframe);
+				lstrcpyn(pdi->item.pszText, str, pdi->item.cchTextMax);
 			}
 			break;
 
 			case 4: // Frame Duration
 			{
+				LONGLONG time = (LONGLONG)((av_q2d(m_streamInfo.time_base) * (*m_pFrameInfoList)[lItemIndex].duration) * 10000000L);
+				_stprintf_s(str, MAX_PATH, _T("%I64d"), time);
+				lstrcpyn(pdi->item.pszText, str, pdi->item.cchTextMax);
 			}
 			break;
 		}

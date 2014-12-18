@@ -51,7 +51,9 @@ LRESULT CInfoPanelDlg::OnParse(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCt
 		UINT video_selected_stream_index = (UINT)clStreamInfo.GetItemData(lSel);
 		if (m_clGetVideoBitrate.Parse(video_selected_stream_index))
 		{
-			m_clFrameInfoList.AddListItem(&m_clGetVideoBitrate.GetFrameList());
+			StreamInfo stStreamInfo;
+			m_clGetVideoBitrate.GetStreamInfo(video_selected_stream_index, &stStreamInfo);
+			m_clFrameInfoList.AddListItem(&stStreamInfo, &m_clGetVideoBitrate.GetFrameList());
 		}
 	}
 	else
