@@ -209,6 +209,7 @@
     <ClCompile Include="AboutDlg.cpp" />
     <ClCompile Include="BitrateViewer.cpp" />
     <ClCompile Include="BitrateViewerView.cpp" />
+    <ClCompile Include="FrameInfoList.cpp" />
     <ClCompile Include="GetVideoBitrate.cpp" />
     <ClCompile Include="InfoPanelDlg.cpp" />
     <ClCompile Include="MainFrm.cpp" />
@@ -222,6 +223,7 @@
   <ItemGroup>
     <ClInclude Include="AboutDlg.h" />
     <ClInclude Include="BitrateViewerView.h" />
+    <ClInclude Include="FrameInfoList.h" />
     <ClInclude Include="GetVideoBitrate.h" />
     <ClInclude Include="InfoPanelDlg.h" />
     <ClInclude Include="MainFrm.h" />

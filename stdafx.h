@@ -23,6 +23,7 @@ extern CAppModule _Module;
 #include <atldlgs.h>
 #include <atlctrlw.h>
 #include <atlmisc.h>
+#include <atlctrlx.h>
 
 #include <vector>
 
@@ -49,6 +50,7 @@ extern "C"
 
 #include "resource.h"
 
+#include "FrameInfoList.h"
 #include "InfoPanelDlg.h"
 
 #if defined _M_IX86

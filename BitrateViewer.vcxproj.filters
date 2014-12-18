@@ -37,6 +37,9 @@
     <ClCompile Include="InfoPanelDlg.cpp">
       <Filter>UI\InfoPanel</Filter>
     </ClCompile>
+    <ClCompile Include="FrameInfoList.cpp">
+      <Filter>UI\InfoPanel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AboutDlg.h">
@@ -58,6 +61,9 @@
       <Filter>ffmpeg</Filter>
     </ClInclude>
     <ClInclude Include="InfoPanelDlg.h">
+      <Filter>UI\InfoPanel</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameInfoList.h">
       <Filter>UI\InfoPanel</Filter>
     </ClInclude>
   </ItemGroup>

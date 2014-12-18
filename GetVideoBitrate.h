@@ -5,6 +5,7 @@ struct FrameBitrate
 	int64_t pts;
 	int64_t dts;
 	int framesize;
+	int duration;
 };
 
 struct StreamInfo
@@ -33,6 +34,7 @@ public:
 public:
 	UINT GetStreamCount() const;
 	BOOL GetStreamInfo(UINT index, StreamInfo *pStreamInfo);
+	const std::vector<FrameBitrate > &GetFrameList() const { return m_frameInfoList; };
 
 public:
 	LPCTSTR GetErrorMsg() const { return m_strErrorMsg; }

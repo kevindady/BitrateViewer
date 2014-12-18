@@ -69,8 +69,11 @@ BOOL CGetVideoBitrate::Parse(UINT video_selected_stream_index)
     AVPacket pkt;
 	int ret;
 
-	BOOL bFindFirstPTS = FALSE;
-	int64_t firstpts = -1;
+	StreamInfo streamInfo;
+	GetStreamInfo(video_selected_stream_index, &streamInfo);
+	LONG frameNumber = (LONG)(streamInfo.duration * streamInfo.frame_rate / 10000000L);
+	m_frameInfoList.clear();
+	m_frameInfoList.reserve(frameNumber);
 	while (1)
 	{
         AVStream *in_stream;
@@ -83,12 +86,13 @@ BOOL CGetVideoBitrate::Parse(UINT video_selected_stream_index)
 
 		if (pkt.stream_index == video_selected_stream_index)
 		{
-			if (!bFindFirstPTS)
-			{
-				firstpts = pkt.pts;
-				bFindFirstPTS = TRUE;
-			}
-			log_packet(m_ifmt_ctx, &pkt, firstpts);
+			FrameBitrate frame;
+			frame.pts = pkt.pts;
+			frame.dts = pkt.dts;
+			frame.framesize = pkt.size;
+			frame.duration = pkt.duration;
+			m_frameInfoList.push_back(frame);
+//			log_packet(m_ifmt_ctx, &pkt, firstpts);
 		}
 
         av_free_packet(&pkt);
@@ -133,5 +137,7 @@ BOOL CGetVideoBitrate::GetStreamInfo(UINT index, StreamInfo *pStreamInfo)
 	}
 	return FALSE;
 }
+
+
 
 

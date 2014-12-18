@@ -19,7 +19,17 @@ LRESULT CInfoPanelDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*l
 	clShowMode.SetItemData(2, (DWORD_PTR)FRAME_MODE);
 	CComboBox clStreamInfo = GetDlgItem(IDC_STREAMINFO);
 	clStreamInfo.ResetContent();
+
+	m_clFrameInfoList.Init(GetDlgItem(IDC_PTSLIST));
+
 	return TRUE;
+}
+
+LRESULT CInfoPanelDlg::OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled)
+{
+	m_clFrameInfoList.Uninit();
+	bHandled = FALSE;
+	return 0;
 }
 
 LRESULT CInfoPanelDlg::OnOpenFile(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
@@ -39,7 +49,10 @@ LRESULT CInfoPanelDlg::OnParse(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCt
 	if (lSel != CB_ERR)
 	{
 		UINT video_selected_stream_index = (UINT)clStreamInfo.GetItemData(lSel);
-		m_clGetVideoBitrate.Parse(video_selected_stream_index);
+		if (m_clGetVideoBitrate.Parse(video_selected_stream_index))
+		{
+			m_clFrameInfoList.AddListItem(&m_clGetVideoBitrate.GetFrameList());
+		}
 	}
 	else
 	{
