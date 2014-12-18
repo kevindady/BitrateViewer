@@ -22,15 +22,17 @@ CGetVideoBitrate::~CGetVideoBitrate()
 }
 
 
-static void log_packet(const AVFormatContext *fmt_ctx, const AVPacket *pkt, const char *tag)
+static void log_packet(const AVFormatContext *fmt_ctx, const AVPacket *pkt, int64_t firstpts)
 {
 	AVRational *time_base = &fmt_ctx->streams[pkt->stream_index]->time_base;
 	double video_frame_rate = (double)(fmt_ctx->streams[pkt->stream_index]->codec->framerate.num) / fmt_ctx->streams[pkt->stream_index]->codec->framerate.den;
 	char szbuf[200];
-	sprintf_s(szbuf, 200, "pts:%I64d duration:%d bitrate=%d keyframe=%d\r\n",
+	sprintf_s(szbuf, 200, "pts:%I64d time=%I64d time2=%I64d duration:%d bitrate=%d keyframe=%d\r\n",
 		pkt->pts,
+		(LONGLONG)((av_q2d(*time_base) * pkt->pts) * 10000000L),
+		(LONGLONG)((av_q2d(*time_base) * (pkt->pts - firstpts)) * 10000000L),
 		pkt->duration,
-		int(pkt->size * 8 * video_frame_rate), (pkt->flags & AV_PKT_FLAG_KEY) ? 1 : 0); // 30 frame rate
+		int(pkt->size * 8 * video_frame_rate), (pkt->flags & AV_PKT_FLAG_KEY) ? 1 : 0);
 	OutputDebugStringA(szbuf);
 }
 
@@ -67,6 +69,8 @@ BOOL CGetVideoBitrate::Parse(UINT video_selected_stream_index)
     AVPacket pkt;
 	int ret;
 
+	BOOL bFindFirstPTS = FALSE;
+	int64_t firstpts = -1;
 	while (1)
 	{
         AVStream *in_stream;
@@ -79,7 +83,12 @@ BOOL CGetVideoBitrate::Parse(UINT video_selected_stream_index)
 
 		if (pkt.stream_index == video_selected_stream_index)
 		{
-			log_packet(m_ifmt_ctx, &pkt, "in");
+			if (!bFindFirstPTS)
+			{
+				firstpts = pkt.pts;
+				bFindFirstPTS = TRUE;
+			}
+			log_packet(m_ifmt_ctx, &pkt, firstpts);
 		}
 
         av_free_packet(&pkt);
