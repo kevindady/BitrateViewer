@@ -62,8 +62,11 @@ BOOL CInfoPanelDlg::Open(LPCTSTR lpszFileName)
 		{
 			for (UINT i = 0; i < count; ++i)
 			{
-				CString strDesc = m_clGetVideoBitrate.GetStreamInfo(i);
-				AddStreamInfo(strDesc, i);
+				StreamInfo stStreamInfo;
+				if (m_clGetVideoBitrate.GetStreamInfo(i, &stStreamInfo))
+				{
+					AddStreamInfo(stStreamInfo.strStreamName, i);
+				}
 			}
 		}
 	}

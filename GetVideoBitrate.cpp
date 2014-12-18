@@ -112,18 +112,26 @@ UINT CGetVideoBitrate::GetStreamCount() const
 	return 0;
 }
 
-CString CGetVideoBitrate::GetStreamInfo(UINT index) const
+BOOL CGetVideoBitrate::GetStreamInfo(UINT index, StreamInfo *pStreamInfo)
 {
-	CString strRet;
-	if (m_ifmt_ctx && index >= 0 && index < m_ifmt_ctx->nb_streams)
+	if (pStreamInfo && m_ifmt_ctx && index >= 0 && index < m_ifmt_ctx->nb_streams)
 	{
+		pStreamInfo->codec_type = m_ifmt_ctx->streams[index]->codec->codec_type;
+		pStreamInfo->codec_id = m_ifmt_ctx->streams[index]->codec->codec_id;
+		pStreamInfo->width = m_ifmt_ctx->streams[index]->codec->width;
+		pStreamInfo->height = m_ifmt_ctx->streams[index]->codec->height;
+		pStreamInfo->duration = m_ifmt_ctx->streams[index]->duration;// -m_ifmt_ctx->streams[index]->start_time;
+		pStreamInfo->duration = (LONGLONG)((av_q2d(m_ifmt_ctx->streams[index]->time_base) * pStreamInfo->duration) * 10000000L);
+		pStreamInfo->sample_aspect_ratio = m_ifmt_ctx->streams[index]->codec->sample_aspect_ratio;
+		pStreamInfo->frame_rate = ((double)m_ifmt_ctx->streams[index]->r_frame_rate.num) / m_ifmt_ctx->streams[index]->r_frame_rate.den;
 		const AVCodecDescriptor *desc = avcodec_descriptor_get(m_ifmt_ctx->streams[index]->codec->codec_id);
 		if (desc)
 		{
-			strRet = desc->long_name;
+			pStreamInfo->strStreamName = desc->long_name;
 		}
+		return TRUE;
 	}
-	return strRet;
+	return FALSE;
 }
 
 

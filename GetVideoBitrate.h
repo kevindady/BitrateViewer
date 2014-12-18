@@ -7,6 +7,18 @@ struct FrameBitrate
 	int framesize;
 };
 
+struct StreamInfo
+{
+	CString strStreamName;
+	AVMediaType codec_type;
+	AVCodecID codec_id;
+	int width;
+	int height;
+	int64_t duration;
+	AVRational sample_aspect_ratio;
+	double frame_rate;
+};
+
 class CGetVideoBitrate
 {
 public:
@@ -20,7 +32,7 @@ public:
 
 public:
 	UINT GetStreamCount() const;
-	CString GetStreamInfo(UINT index) const;
+	BOOL GetStreamInfo(UINT index, StreamInfo *pStreamInfo);
 
 public:
 	LPCTSTR GetErrorMsg() const { return m_strErrorMsg; }
